@@ -17,3 +17,7 @@ SELECT ST_AsBinary(rast) FROM rasters;
 ```
 
 The binary buffer can be passed directly to read_wkb_raster.
+
+### Links
+
+- [Raster WKB RFC](http://trac.osgeo.org/postgis/browser/trunk/raster/doc/RFC2-WellKnownBinaryFormat)
