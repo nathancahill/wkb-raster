@@ -3,7 +3,7 @@ from struct import unpack
 import numpy as np
 
 
-def read_wkb_raster(buf):
+def read_wkb_raster(wkb):
     """Read a WKB raster to a numpy 2d array.
 
     Based off of the RFC here:
@@ -29,7 +29,7 @@ def read_wkb_raster(buf):
         }, ...]
     }
 
-    :buf buffer: Binary buffer in WKB format
+    :wkb file-like object: Binary raster in WKB format
     :returns: obj
     """
     ret = {}
@@ -40,7 +40,7 @@ def read_wkb_raster(buf):
     # | endiannes     | byte        | 1:ndr/little endian          |
     # |               |             | 0:xdr/big endian             |
     # +---------------+-------------+------------------------------+
-    firstbyte = buf.read(1)
+    firstbyte = wkb.read(1)
 
     try:
         (endian,) = unpack('<b', firstbyte)
@@ -85,7 +85,7 @@ def read_wkb_raster(buf):
     # | height        | uint16      | number of pixel rows         |
     # +---------------+-------------+------------------------------+
     (version, bands, scaleX, scaleY, ipX, ipY, skewX, skewY,
-     srid, width, height) = unpack(endian + 'HHddddddIHH', buf.read(60))
+     srid, width, height) = unpack(endian + 'HHddddddIHH', wkb.read(60))
 
     ret['version'] = version
     ret['scaleX'] = scaleX
@@ -139,7 +139,7 @@ def read_wkb_raster(buf):
         #
         # Requires reading a single byte, and splitting the bits into the
         # header attributes
-        (bits,) = unpack(endian + 'b', buf.read(1))
+        (bits,) = unpack(endian + 'b', wkb.read(1))
         bits = '{0:08b}'.format(bits)
 
         band['isOffline'] = bits[0]
@@ -161,7 +161,7 @@ def read_wkb_raster(buf):
         fmt = fmts[pixtype]
 
         # Read the nodata value
-        (nodata,) = unpack(endian + fmt, buf.read(size))
+        (nodata,) = unpack(endian + fmt, wkb.read(size))
 
         band['nodata'] = nodata
 
@@ -180,7 +180,7 @@ def read_wkb_raster(buf):
         # +---------------+--------------+-----------------------------------+
         band['ndarray'] = np.ndarray(
             (width, height),
-            buffer=buf.read(width * height * size),
+            buffer=wkb.read(width * height * size),
             dtype=np.dtype(dtype)
         )
 

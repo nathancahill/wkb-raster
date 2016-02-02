@@ -5,7 +5,7 @@ Read WKB rasters to Numpy arrays.
 ```python
 from wkb_raster import read_wkb_raster
 
-raster = read_wkb_raster(buf)
+raster = read_wkb_raster(wkb)
 raster['bands'][0]
 ```
 
@@ -16,7 +16,7 @@ to return the WKB representation of the raster.
 SELECT ST_AsBinary(rast) FROM rasters;
 ```
 
-The binary buffer can be passed directly to read_wkb_raster.
+Wrap the returned buffer in `cStringIO.StringIO` to pass it to `read_wkb_raster`.
 
 ### Links
 
