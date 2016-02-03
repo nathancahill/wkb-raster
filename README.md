@@ -27,6 +27,9 @@ __Returns__
         'height': int,
         'bands': [{
             'nodata': bool|int|float,
+            'isOffline': bool,
+            'hasNodataValue': bool,
+            'isNodataValue': bool,
             'ndarray': numpy.ndarray((width, height), bool|int|float)
         }, ...]
     }

@@ -4,7 +4,7 @@ import numpy as np
 
 
 def read_wkb_raster(wkb):
-    """Read a WKB raster to a numpy 2d array.
+    """Read a WKB raster to a Numpy array.
 
     Based off of the RFC here:
 
@@ -25,6 +25,9 @@ def read_wkb_raster(wkb):
         'height': int,
         'bands': [{
             'nodata': bool|int|float,
+            'isOffline': bool,
+            'hasNodataValue': bool,
+            'isNodataValue': bool,
             'ndarray': numpy.ndarray((width, height), bool|int|float)
         }, ...]
     }
@@ -140,13 +143,12 @@ def read_wkb_raster(wkb):
         # Requires reading a single byte, and splitting the bits into the
         # header attributes
         (bits,) = unpack(endian + 'b', wkb.read(1))
-        bits = '{0:08b}'.format(bits)
 
-        band['isOffline'] = bits[0]
-        band['hasNodataValue'] = bits[1]
-        band['isNodataValue'] = bits[2]
+        band['isOffline'] = bool(bits & 128)
+        band['hasNodataValue'] = bool(bits & 64)
+        band['isNodataValue'] = bool(bits & 32)
 
-        pixtype = int(bits[4:], 2) - 1
+        pixtype = (bits & 15) - 1
 
         # Based on the pixel type, determine the struct format, byte size and
         # numpy dtype
