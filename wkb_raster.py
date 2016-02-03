@@ -144,11 +144,11 @@ def read_wkb_raster(wkb):
         # header attributes
         (bits,) = unpack(endian + 'b', wkb.read(1))
 
-        band['isOffline'] = bool(bits & 128)
-        band['hasNodataValue'] = bool(bits & 64)
-        band['isNodataValue'] = bool(bits & 32)
+        band['isOffline'] = bool(bits & 128)  # first bit
+        band['hasNodataValue'] = bool(bits & 64)  # second bit
+        band['isNodataValue'] = bool(bits & 32)  # third bit
 
-        pixtype = (bits & 15) - 1
+        pixtype = (bits & 15) - 1  # bits 5-8
 
         # Based on the pixel type, determine the struct format, byte size and
         # numpy dtype
