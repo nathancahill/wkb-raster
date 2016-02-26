@@ -17,7 +17,7 @@ from setuptools import setup
 
 setup(
     name='WKB-Raster',
-    version='0.4',
+    version='0.5',
     url='https://github.com/nathancahill/wkb-raster',
     license='MIT',
     author='Nathan Cahill',
