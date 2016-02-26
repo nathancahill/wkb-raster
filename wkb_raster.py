@@ -181,7 +181,7 @@ def read_wkb_raster(wkb):
         # |               |              |                                   |
         # +---------------+--------------+-----------------------------------+
         band['ndarray'] = np.ndarray(
-            (width, height),
+            (height, width),
             buffer=wkb.read(width * height * size),
             dtype=np.dtype(dtype)
         )
