@@ -43,17 +43,12 @@ def read_wkb_raster(wkb):
     # | endiannes     | byte        | 1:ndr/little endian          |
     # |               |             | 0:xdr/big endian             |
     # +---------------+-------------+------------------------------+
-    firstbyte = wkb.read(1)
+    (endian,) = unpack('<b', wkb.read(1))
 
-    try:
-        (endian,) = unpack('<b', firstbyte)
-    except:
-        (endian,) = unpack('>b', firstbyte)
-
-    if endian == 1:
-        endian = '<'
-    elif endian == 0:
+    if endian == 0:
         endian = '>'
+    elif endian == 1:
+        endian = '<'
 
     # Read the raster header data.
     #
