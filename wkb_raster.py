@@ -1,4 +1,3 @@
-
 from struct import unpack
 import numpy as np
 
@@ -146,7 +145,7 @@ def read_wkb_raster(wkb):
         band['hasNodataValue'] = bool(bits & 64)  # second bit
         band['isNodataValue'] = bool(bits & 32)  # third bit
 
-        pixtype = (bits & 15) - 1  # bits 5-8
+        pixtype = bits & 15  # bits 5-8
 
         # Based on the pixel type, determine the struct format, byte size and
         # numpy dtype
@@ -178,11 +177,10 @@ def read_wkb_raster(wkb):
             # +-------------+-------------+-----------------------------------+
 
             # offline bands are 0-based, make 1-based for user consumption
-            (band_num,) = unpack('B', wkb.read(1))
+            (band_num,) = unpack(endian + 'B', wkb.read(1))
             band['offLineBandNumber'] = band_num + 1
 
             data = b''
-
             while True:
                 byte = wkb.read(1)
                 if byte == b'\x00':
@@ -191,6 +189,8 @@ def read_wkb_raster(wkb):
                 data += byte
 
             band['offLinePath'] = data.decode()
+
+            band['data_type'] = np.dtype(dtype).name
 
         else:
 
