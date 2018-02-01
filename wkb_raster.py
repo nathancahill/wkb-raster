@@ -1,7 +1,9 @@
-
 from struct import unpack
 import numpy as np
 
+__all__ = [
+    'read_wkb_raster'
+]
 
 def read_wkb_raster(wkb):
     """Read a WKB raster to a Numpy array.
@@ -143,7 +145,7 @@ def read_wkb_raster(wkb):
         band['hasNodataValue'] = bool(bits & 64)  # second bit
         band['isNodataValue'] = bool(bits & 32)  # third bit
 
-        pixtype = (bits & 15) - 1  # bits 5-8
+        pixtype = bits & 15  # bits 5-8
 
         # Based on the pixel type, determine the struct format, byte size and
         # numpy dtype
@@ -162,24 +164,52 @@ def read_wkb_raster(wkb):
 
         band['nodata'] = nodata
 
-        # Read the pixel values: width * height * size
-        #
-        # +---------------+--------------+-----------------------------------+
-        # | pix[w*h]      | 1 to 8 bytes | Pixels values, row after row,     |
-        # |               | depending on | so pix[0] is upper-left, pix[w-1] |
-        # |               | pixtype [1]  | is upper-right.                   |
-        # |               |              |                                   |
-        # |               |              | As for endiannes, it is specified |
-        # |               |              | at the start of WKB, and implicit |
-        # |               |              | up to 8bits (bit-order is most    |
-        # |               |              | significant first)                |
-        # |               |              |                                   |
-        # +---------------+--------------+-----------------------------------+
-        band['ndarray'] = np.ndarray(
-            (height, width),
-            buffer=wkb.read(width * height * size),
-            dtype=np.dtype(dtype)
-        )
+        if band['isOffline']:
+
+            # Read the out-db metadata
+            #
+            # +-------------+-------------+-----------------------------------+
+            # | bandNumber  | uint8       | 0-based band number to use from   |
+            # |             |             | the set available in the external |
+            # |             |             | file                              |
+            # +-------------+-------------+-----------------------------------+
+            # | path        | string      | null-terminated path to data file |
+            # +-------------+-------------+-----------------------------------+
+
+            # offline bands are 0-based, make 1-based for user consumption
+            (band_num,) = unpack(endian + 'B', wkb.read(1))
+            band['bandNumber'] = band_num + 1
+
+            data = b''
+            while True:
+                byte = wkb.read(1)
+                if byte == b'\x00':
+                    break
+
+                data += byte
+
+            band['path'] = data.decode()
+
+        else:
+
+            # Read the pixel values: width * height * size
+            #
+            # +------------+--------------+-----------------------------------+
+            # | pix[w*h]   | 1 to 8 bytes | Pixels values, row after row,     |
+            # |            | depending on | so pix[0] is upper-left, pix[w-1] |
+            # |            | pixtype [1]  | is upper-right.                   |
+            # |            |              |                                   |
+            # |            |              | As for endiannes, it is specified |
+            # |            |              | at the start of WKB, and implicit |
+            # |            |              | up to 8bits (bit-order is most    |
+            # |            |              | significant first)                |
+            # |            |              |                                   |
+            # +------------+--------------+-----------------------------------+
+            band['ndarray'] = np.ndarray(
+                (height, width),
+                buffer=wkb.read(width * height * size),
+                dtype=np.dtype(dtype)
+            )
 
         ret['bands'].append(band)
 
