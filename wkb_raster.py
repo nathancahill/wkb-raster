@@ -178,7 +178,7 @@ def read_wkb_raster(wkb):
 
             # offline bands are 0-based, make 1-based for user consumption
             (band_num,) = unpack(endian + 'B', wkb.read(1))
-            band['offLineBandNumber'] = band_num + 1
+            band['bandNumber'] = band_num + 1
 
             data = b''
             while True:
@@ -188,9 +188,7 @@ def read_wkb_raster(wkb):
 
                 data += byte
 
-            band['offLinePath'] = data.decode()
-
-            band['data_type'] = np.dtype(dtype).name
+            band['path'] = data.decode()
 
         else:
 
