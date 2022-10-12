@@ -339,7 +339,7 @@ def write_wkb_raster(raster_file_path):
             # +---------------+--------------+-----------------------------------+
 
             # not used - always False
-            ifOffline = False
+            isOffline = False
             hasNodataValue = False
 
             if "nodata" in src.meta:
