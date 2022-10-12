@@ -25,5 +25,5 @@ setup(
     description='Read WKB rasters to Numpy arrays.',
     long_description=__doc__,
     py_modules=['wkb_raster'],
-    install_requires=['numpy']
+    install_requires=['numpy', 'rasterio']
 )
