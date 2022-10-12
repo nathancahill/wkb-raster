@@ -351,12 +351,6 @@ def write_wkb_raster(raster_file_path):
             # unset
             reserved = False
 
-            # band['isOffline'] = bool(bits & 128)  # first bit
-            # band['hasNodataValue'] = bool(bits & 64)  # second bit
-            # band['isNodataValue'] = bool(bits & 32)  # third bit
-
-            # pixtype = bits & 15  # bits 5-8
-
             # # Based on the pixel type, determine the struct format, byte size and
             # # numpy dtype
             fmts = ['?', 'B', 'B', 'b', 'B', 'h',
