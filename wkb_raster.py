@@ -371,7 +371,7 @@ def write_wkb_raster(raster_file_path):
             fmt = fmts[pixtype]
 
             # format binary -> :b
-            binary_str = f"{ifOffline:b}{hasNodataValue:b}{isNodataValue:b}{reserved:b}{pixtype:b}"
+            binary_str = f"{isOffline:b}{hasNodataValue:b}{isNodataValue:b}{reserved:b}{pixtype:b}"
             # convert to int
             binary_decimal = int(binary_str, 2)
 
