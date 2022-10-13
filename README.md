@@ -1,6 +1,6 @@
 ## WKB Raster
 
-Read WKB rasters to Numpy arrays.
+Read WKB rasters to Numpy arrays and convert any raster to WKB format.
 
 ### Docs
 
@@ -36,6 +36,8 @@ __Returns__
 
 __Usage__
 
+## Reading
+
 With a binary WKB file:
 
 ```python
@@ -62,6 +64,17 @@ from wkb_raster import read_wkb_raster
 raster = read_wkb_raster(StringIO(buf))
 raster['bands'][0]
 ```
+
+## Writing WKB
+With rasterio read any supported raster format and convert it to WKB format.
+
+```python
+from wkb_raster import write_wkb_raster
+
+geotiff_file_path = "489724.tif"
+wkb = write_wkb_raster(geotiff_file_path)
+```
+
 
 ### Links
 
