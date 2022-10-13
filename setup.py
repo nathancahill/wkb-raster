@@ -2,7 +2,7 @@
 WKB-Raster
 ----------
 
-Read WKB rasters to Numpy arrays.
+Read WKB rasters to Numpy arrays and write rasters to WKB.
 
 Links
 `````
@@ -22,8 +22,8 @@ setup(
     license='MIT',
     author='Nathan Cahill',
     author_email='nathan@nathancahill.com',
-    description='Read WKB rasters to Numpy arrays and convert any raster to WKB.',
+    description='Read WKB rasters to Numpy arrays and write rasters to WKB.',
     long_description=__doc__,
     py_modules=['wkb_raster'],
-    install_requires=['numpy', 'rasterio']
+    install_requires=['numpy',]
 )
