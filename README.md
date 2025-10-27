@@ -77,6 +77,25 @@ with rasterio.open('example.tif') as dataset:
     wkb = write_wkb_raster(dataset)
 ```
 
+## Writing WKB from Numpy and Affine
+Write a Numpy-Array to WKB-Raster
+```python
+import numpy as np
+from affine import Affine
+from wkb_raster import numpy_to_wkb
+
+my_rasterdata: np.ndarray = .....
+
+wkb = numpy_to_wkb(my_rasterdata, transform=tr)
+```
+
+## Converting wkb to wkb_hex
+```python
+from wkb_raster import wkb_to_hexstring_raster
+
+wkb_hex = wkb_to_hexstring_raster(wkb)
+```
+
 ### Links
 
 - [Raster WKB RFC](http://trac.osgeo.org/postgis/browser/trunk/raster/doc/RFC2-WellKnownBinaryFormat)
